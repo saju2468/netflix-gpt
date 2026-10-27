@@ -1,0 +1,121 @@
+mutation CreateUser($displayName: String, $avatarUrl: String, $preferredGenres: [String!]) @auth(level: USER) {
+  user_insert(data: {
+    uid_expr: "auth.uid",
+    email_expr: "auth.token.email",
+    createdAt_expr: "request.time",
+    displayName: $displayName,
+    avatarUrl: $avatarUrl,
+    preferredGenres: $preferredGenres
+  })
+}
+
+mutation UpdateUser($displayName: String, $avatarUrl: String, $preferredGenres: [String!]) @auth(level: USER) {
+  user_update(key: {id_expr: "auth.uid"}, data: {
+    displayName: $displayName,
+    avatarUrl: $avatarUrl,
+    preferredGenres: $preferredGenres
+  })
+}
+
+mutation DeleteUser @auth(level: USER) {
+  user_delete(key: {id_expr: "auth.uid"})
+}
+
+query GetUser @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    id uid email displayName avatarUrl preferredGenres
+  }
+}
+
+query ListUsers @auth(level: USER) {
+  users {
+    id displayName email
+  }
+}
+
+mutation CreateMovie($tmdbId: Int64!, $title: String!, $posterUrl: String!, $releaseDate: Date, $genreList: [String!]) @auth(level: PUBLIC, insecureReason: "Movies are public catalog data.") {
+  movie_insert(data: {tmdbId: $tmdbId, title: $title, posterUrl: $posterUrl, releaseDate: $releaseDate, genreList: $genreList})
+}
+
+mutation UpdateMovie($id: UUID!, $title: String) @auth(level: PUBLIC, insecureReason: "Movies are public catalog data.") {
+  movie_update(key: {id: $id}, data: {title: $title})
+}
+
+mutation DeleteMovie($id: UUID!) @auth(level: PUBLIC, insecureReason: "Movies are public catalog data.") {
+  movie_delete(key: {id: $id})
+}
+
+query GetMovie($id: UUID!) @auth(level: PUBLIC, insecureReason: "Movies are public catalog data.") {
+  movie(key: {id: $id}) {
+    id title posterUrl releaseDate genreList
+  }
+}
+
+query ListMovies @auth(level: PUBLIC, insecureReason: "Movies are public catalog data.") {
+  movies {
+    id title releaseDate
+  }
+}
+
+mutation CreateFavorite($movieId: UUID!) @auth(level: USER) {
+  favorite_insert(data: {
+    movieId: $movieId,
+    userId_expr: "auth.uid",
+    createdAt_expr: "request.time"
+  })
+}
+
+mutation DeleteFavorite($id: UUID!) @auth(level: USER) {
+  favorite_delete(key: {id: $id})
+}
+
+query GetFavorite($id: UUID!) @auth(level: USER) {
+  favorite(key: {id: $id}) {
+    id movie { title }
+  }
+}
+
+query ListMyFavorites @auth(level: USER) {
+  favorites(where: {userId: {eq_expr: "auth.uid"}}) {
+    id movie { title }
+  }
+}
+
+mutation CreateRecommendation($movieId: UUID!, $reason: String!, $score: Float) @auth(level: USER) {
+  recommendation_insert(data: {
+    movieId: $movieId,
+    userId_expr: "auth.uid",
+    reason: $reason,
+    score: $score
+  })
+}
+
+mutation DeleteRecommendation($id: UUID!) @auth(level: USER) {
+  recommendation_delete(key: {id: $id})
+}
+
+query ListRecommendations @auth(level: USER) {
+  recommendations {
+    id reason score movie { title }
+  }
+}
+
+mutation CreateReview($movieId: UUID!, $rating: Int!, $comment: String) @auth(level: USER) {
+  review_insert(data: {
+    movieId: $movieId,
+    userId_expr: "auth.uid",
+    rating: $rating,
+    comment: $comment,
+    createdAt_expr: "request.time"
+  })
+}
+
+mutation DeleteReview($id: UUID!) @auth(level: USER) {
+  review_delete(key: {id: $id})
+}
+
+query ListMovieReviews($movieId: UUID!) @auth(level: PUBLIC, insecureReason: "Reviews are public.") {
+  reviews(where: {movieId: {eq: $movieId}}) {
+    rating comment user { displayName }
+  }
+}

@@ -1,10 +1,28 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { CheckValidateData } from "../utilities/validate";
 
 const AuthForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
+  const [errors, setErrors] = useState({});
+
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+
+  const handleButtonclick = () => {
+    const message = CheckValidateData(
+      email.current.value,
+      password.current.value,
+      name.current?.value,
+    );
+
+    setErrors(message);
+  };
+
   const toggleSignup = () => {
     setIsSignUp(!isSignUp);
+    setErrors({});
   };
 
   return (
@@ -29,6 +47,7 @@ const AuthForm = () => {
             </label>
             <div className="relative">
               <input
+                ref={name}
                 id="fullName"
                 name="fullName"
                 type="text"
@@ -37,6 +56,7 @@ const AuthForm = () => {
                 className="w-full px-4 py-3.5 bg-zinc-800/80 hover:bg-zinc-800 focus:bg-zinc-800/95 text-white text-base rounded-md border border-zinc-700/80 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] focus:outline-none transition-all placeholder:text-zinc-500"
               />
             </div>
+            <p className="text-red-500 text-xs mt-0.5">{errors.name}</p>
           </div>
         )}
 
@@ -53,11 +73,13 @@ const AuthForm = () => {
               id="email"
               name="email"
               type="email"
+              ref={email}
               autoComplete="email"
               placeholder="name@example.com"
               className="w-full px-4 py-3.5 bg-zinc-800/80 hover:bg-zinc-800 focus:bg-zinc-800/95 text-white text-base rounded-md border border-zinc-700/80 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] focus:outline-none transition-all placeholder:text-zinc-500"
             />
           </div>
+          <p className="text-red-500 text-xs mt-0.5">{errors.email}</p>
         </div>
 
         {/* Password Field */}
@@ -70,6 +92,7 @@ const AuthForm = () => {
           </label>
           <div className="relative flex items-center">
             <input
+              ref={password}
               id="password"
               name="password"
               type="password"
@@ -78,12 +101,14 @@ const AuthForm = () => {
               className="w-full px-4 py-3.5 bg-zinc-800/80 hover:bg-zinc-800 focus:bg-zinc-800/95 text-white text-base rounded-md border border-zinc-700/80 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] focus:outline-none transition-all placeholder:text-zinc-500"
             />
           </div>
+          <p className="text-red-500 text-xs mt-0.5">{errors.password}</p>
         </div>
 
         {/* Primary Submit Button */}
         <button
           type="submit"
           className="mt-4 w-full py-3.5 px-4 bg-[#E50914] hover:bg-[#c11119] active:scale-[0.99] text-white font-bold rounded-md shadow-lg shadow-red-950/40 cursor-pointer transition-all duration-200 tracking-wide text-base focus:outline-none focus:ring-2 focus:ring-red-500/50"
+          onClick={handleButtonclick}
         >
           {isSignUp ? "Sign Up" : "Sign In"}
         </button>
