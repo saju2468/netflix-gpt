@@ -1,5 +1,10 @@
 import { useRef, useState } from "react";
 import { CheckValidateData } from "../utilities/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utilities/firebase";
 
 const AuthForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -14,10 +19,49 @@ const AuthForm = () => {
     const message = CheckValidateData(
       email.current.value,
       password.current.value,
-      name.current?.value,
+      isSignUp ? name.current?.value : undefined,
     );
-
     setErrors(message);
+
+    if (Object.keys(message).length > 0) return;
+
+    if (isSignUp) {
+      // Sign Up logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value,
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("Signed up successfully:", user);
+          setErrors({});
+        })
+        .catch((error) => {
+          setErrors((prev) => ({
+            ...prev,
+            general: error.message,
+          }));
+        });
+    } else {
+      // Sign In logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value,
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("Signed in successfully:", user);
+          setErrors({});
+        })
+        .catch((error) => {
+          setErrors((prev) => ({
+            ...prev,
+            general: error.message,
+          }));
+        });
+    }
   };
 
   const toggleSignup = () => {
@@ -103,6 +147,15 @@ const AuthForm = () => {
           </div>
           <p className="text-red-500 text-xs mt-0.5">{errors.password}</p>
         </div>
+
+        {/* General Auth Error Message */}
+        {errors.general && (
+          <div className="p-3 bg-red-950/60 border border-red-500/50 rounded-md">
+            <p className="text-red-400 text-xs sm:text-sm font-medium leading-relaxed">
+              {errors.general}
+            </p>
+          </div>
+        )}
 
         {/* Primary Submit Button */}
         <button
