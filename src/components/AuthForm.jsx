@@ -3,12 +3,14 @@ import { CheckValidateData } from "../utilities/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utilities/firebase";
-import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utilities/userSlice";
 
 const AuthForm = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isSignUp, setIsSignUp] = useState(false);
 
   const [errors, setErrors] = useState({});
@@ -36,9 +38,32 @@ const AuthForm = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
+
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL:
+              "https://img1.hotstarext.com/image/upload/w_200,h_200,c_fill/feature/profile/19_rebranded.png",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid,
+                  email,
+                  displayName,
+                  photoURL,
+                }),
+              );
+            })
+            .catch((error) => {
+              setErrors((prev) => ({
+                ...prev,
+                general: error.message,
+              }));
+            });
+
           console.log("Signed up successfully:", user);
           setErrors({});
-          navigate("/browse");
         })
         .catch((error) => {
           setErrors((prev) => ({
@@ -57,7 +82,6 @@ const AuthForm = () => {
           const user = userCredential.user;
           console.log("Signed in successfully:", user);
           setErrors({});
-          navigate("/browse");
         })
         .catch((error) => {
           setErrors((prev) => ({
