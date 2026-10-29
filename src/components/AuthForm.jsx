@@ -98,8 +98,7 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[450px] mx-auto bg-black/75 backdrop-blur-md rounded-xl p-8 sm:p-12 md:p-14 border border-white/10 shadow-2xl shadow-black/90 text-white transition-all duration-300">
-      {/* Form Heading */}
+    <div className="w-full max-w-112.5 mx-auto bg-black/75 backdrop-blur-md rounded-xl p-8 sm:p-12 md:p-14 border border-white/10 shadow-2xl shadow-black/90 text-white transition-all duration-300">
       <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8">
         {isSignUp ? "Sign Up" : "Sign In"}
       </h1>
@@ -108,7 +107,7 @@ const AuthForm = () => {
         onSubmit={(e) => e.preventDefault()}
         className="flex flex-col gap-4"
       >
-        {/* Full Name field (only visible in Sign Up mode) */}
+      
         {isSignUp && (
           <div className="flex flex-col gap-1.5 transition-all duration-300">
             <label
