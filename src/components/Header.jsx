@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { auth } from "../utilities/firebase";
-import { USER_AVATAR } from "../utilities/constants";
+import { LOGO, USER_AVATAR } from "../utilities/constants";
 import { addUser, removeUser } from "../utilities/userSlice";
 import Button from "./Button";
 
@@ -45,11 +45,7 @@ const Header = () => {
       <div className="container flex justify-between items-center">
         <div className="logo">
           <Link to="/">
-            <img
-              className="max-w-36 w-full"
-              src="https://occ.a.nflxso.net/dnmt/api/v6/iL4oJVDYZ8KLSrJ6eG2OwtghbfQ/AAAAAVIENVPMEM3Kn4hVzJseX4N8xPjtBDIpwuFDucWksdxQZ8Ss6Xf8U_vt7ThYYfRmzq0x1CS3nOwTGyVrgADvwfB_tPiK_liS2RjvI40RJSzbKRk-o8b3nCxHfCCnBsyB2XBB9_vRoSmN.svg"
-              alt="Netflix Logo"
-            />
+            <img className="max-w-36 w-full" src={LOGO} alt="Netflix Logo" />
           </Link>
         </div>
         <div className="btn_wrapper flex items-center gap-3">
@@ -60,7 +56,7 @@ const Header = () => {
                 src={user?.photoURL || USER_AVATAR}
                 alt={user?.displayName || "User profile"}
               />
-              <span className="text-black text-sm font-medium">
+              <span className="text-white text-sm font-medium">
                 {user?.displayName}
               </span>
             </div>
