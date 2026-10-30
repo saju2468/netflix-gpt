@@ -6,3 +6,12 @@ export const BANNER_IMAGE =
 
 export const LOGO =
   "https://occ.a.nflxso.net/dnmt/api/v6/iL4oJVDYZ8KLSrJ6eG2OwtghbfQ/AAAAAVIENVPMEM3Kn4hVzJseX4N8xPjtBDIpwuFDucWksdxQZ8Ss6Xf8U_vt7ThYYfRmzq0x1CS3nOwTGyVrgADvwfB_tPiK_liS2RjvI40RJSzbKRk-o8b3nCxHfCCnBsyB2XBB9_vRoSmN.svg";
+
+export const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNzNmOWM0MWU3YzdjZWM0ZDhiNGMwNWVjYjMwM2M5MyIsIm5iZiI6MTc5MzM0MTM4Mi43MzUwMDAxLCJzdWIiOiI2YWU0MzdjNjM0MzU2NWE3YzFjZDc1ZmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.heyZnpv74NCBjvZSbjKxx06pbVRO-i2UF_GtfJ-MZrk",
+  },
+};

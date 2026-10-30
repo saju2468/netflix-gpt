@@ -62,7 +62,6 @@ const AuthForm = () => {
               }));
             });
 
-          console.log("Signed up successfully:", user);
           setErrors({});
         })
         .catch((error) => {
@@ -79,8 +78,8 @@ const AuthForm = () => {
         password.current.value,
       )
         .then((userCredential) => {
+          // eslint-disable-next-line no-unused-vars
           const user = userCredential.user;
-          console.log("Signed in successfully:", user);
           setErrors({});
         })
         .catch((error) => {
@@ -107,7 +106,6 @@ const AuthForm = () => {
         onSubmit={(e) => e.preventDefault()}
         className="flex flex-col gap-4"
       >
-      
         {isSignUp && (
           <div className="flex flex-col gap-1.5 transition-all duration-300">
             <label
