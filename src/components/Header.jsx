@@ -6,6 +6,7 @@ import { auth } from "../utilities/firebase";
 import { LOGO, USER_AVATAR } from "../utilities/constants";
 import { addUser, removeUser } from "../utilities/userSlice";
 import Button from "./Button";
+import { toggleGptSearchView } from "../utilities/gptSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const Header = () => {
     } else {
       navigate("/");
     }
+  };
+
+  const handleGptSearchClick = () => {
+    dispatch(toggleGptSearchView());
   };
 
   useEffect(() => {
@@ -50,15 +55,21 @@ const Header = () => {
         </div>
         <div className="btn_wrapper flex items-center gap-3">
           {user && (
-            <div className="user_profile flex items-center gap-2">
-              <img
-                className="w-8 h-8 rounded object-cover"
-                src={user?.photoURL || USER_AVATAR}
-                alt={user?.displayName || "User profile"}
-              />
-              <span className="text-white text-sm font-medium">
-                {user?.displayName}
-              </span>
+            <div className="wrapper flex gap-3 items-center">
+              <div className="gpt_searchWrapper">
+                <Button text={"GPT Search"} onClick={handleGptSearchClick} />
+              </div>
+
+              <div className="user_profile flex items-center gap-2">
+                <img
+                  className="w-8 h-8 rounded object-cover"
+                  src={user?.photoURL || USER_AVATAR}
+                  alt={user?.displayName || "User profile"}
+                />
+                <span className="text-white text-sm font-medium">
+                  {user?.displayName}
+                </span>
+              </div>
             </div>
           )}
           <Button
