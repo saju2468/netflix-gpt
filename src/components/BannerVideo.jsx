@@ -22,9 +22,8 @@ const BannerVideo = ({ title, overview, movieId }) => {
       </div>
 
       {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/30 to-transparent z-10 pointer-events-none" />
 
-      {/* Content overlay */}
       <div className="content_wrapper absolute bottom-24 left-0 w-full z-20 text-white">
         <div className="container mx-auto px-6 md:px-12">
           <h1 className="text-3xl md:text-5xl font-extrabold max-w-xl">{title}</h1>
