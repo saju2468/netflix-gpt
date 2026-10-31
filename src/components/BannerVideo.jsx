@@ -8,12 +8,12 @@ const BannerVideo = ({ title, overview, movieId }) => {
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Video Background (Scaled up to crop YouTube title and bottom branding) */}
+      {/* Video Background */}
       <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
         {trailerVideo?.key && (
           <iframe
             className="w-screen aspect-video min-h-full min-w-full scale-135 md:scale-150 pointer-events-none"
-            src={`https://www.youtube-nocookie.com/embed/${trailerVideo.key}?autoplay=1&mute=1&controls=0&rel=0&showinfo=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${trailerVideo.key}`}
+            src={`https://www.youtube.com/embed/${trailerVideo.key}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1`}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
@@ -21,8 +21,8 @@ const BannerVideo = ({ title, overview, movieId }) => {
         )}
       </div>
 
-      {/* Dark gradient overlay for Netflix hero banner styling */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10" />
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent z-10 pointer-events-none" />
 
       {/* Content overlay */}
       <div className="content_wrapper absolute bottom-24 left-0 w-full z-20 text-white">
