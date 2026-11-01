@@ -3,15 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { auth } from "../utilities/firebase";
-import { LOGO, USER_AVATAR } from "../utilities/constants";
+import { LOGO, SUPPORTED_LANGUAGES, USER_AVATAR } from "../utilities/constants";
 import { addUser, removeUser } from "../utilities/userSlice";
 import Button from "./Button";
 import { toggleGptSearchView } from "../utilities/gptSlice";
+import { changeLanguage } from "../utilities/configSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
+
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+
+  const handleLanguageChange = (e) => {
+    dispatch(changeLanguage(e.target.value));
+  };
 
   const handleAuthClick = () => {
     if (user) {
@@ -56,8 +63,32 @@ const Header = () => {
         <div className="btn_wrapper flex items-center gap-3">
           {user && (
             <div className="wrapper flex gap-3 items-center">
+              {showGptSearch && (
+                <div className="language_switcher">
+                  <select
+                    onChange={handleLanguageChange}
+                    className="bg-red-600 border text-white px-4 py-2 rounded-md"
+                    name=""
+                    id=""
+                  >
+                    {SUPPORTED_LANGUAGES.map((lang) => (
+                      <option
+                        className="bg-red-600 text-white"
+                        key={lang.identifier}
+                        value={lang.identifier}
+                      >
+                        {lang.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className="gpt_searchWrapper">
-                <Button text={"GPT Search"} onClick={handleGptSearchClick} />
+                <Button
+                  text={showGptSearch ? "Homepage" : "GPT Search"}
+                  onClick={handleGptSearchClick}
+                />
               </div>
 
               <div className="user_profile flex items-center gap-2">

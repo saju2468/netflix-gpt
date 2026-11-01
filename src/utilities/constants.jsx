@@ -18,3 +18,19 @@ export const API_OPTIONS = {
     Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
   },
 };
+
+
+export const SUPPORTED_LANGUAGES = [
+  {
+    identifier: "en",
+    name: "English"
+  },
+  {
+    identifier: "hi", 
+    name: "Hindi"
+  },
+  {
+    identifier: "es",
+    name: "Spanish"
+  }
+]

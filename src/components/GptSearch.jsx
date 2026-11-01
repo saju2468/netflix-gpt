@@ -1,8 +1,10 @@
 import { useRef } from "react";
+import lang from "../utilities/languageConstants";
+import { useSelector } from "react-redux";
 
 const GptSearch = ({
-  placeholder = "What would you like to watch today?",
-  buttonText = "Search",
+  // placeholder = "What would you like to watch today?",
+  // buttonText = "Search",
   onSearch,
 }) => {
   const searchText = useRef(null);
@@ -15,6 +17,8 @@ const GptSearch = ({
     }
   };
 
+  const langKey = useSelector((store) => store.config.lang);
+
   return (
     <div className="pt-[35%] md:pt-[10%] flex justify-center px-4">
       <form
@@ -24,14 +28,16 @@ const GptSearch = ({
         <input
           ref={searchText}
           type="text"
-          placeholder={placeholder}
+          placeholder={
+            lang[langKey]?.gptSearchPlaceholder || lang.en.gptSearchPlaceholder
+          }
           className="col-span-8 sm:col-span-9 px-4 py-3 bg-zinc-900 text-white rounded-lg border border-zinc-700/60 focus:border-red-600 focus:outline-none placeholder:text-zinc-500 text-sm sm:text-base"
         />
         <button
           type="submit"
           className="col-span-4 sm:col-span-3 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition duration-200 cursor-pointer text-sm sm:text-base flex items-center justify-center gap-2"
         >
-          {buttonText}
+          {lang[langKey]?.search || lang.en.search}
         </button>
       </form>
     </div>
