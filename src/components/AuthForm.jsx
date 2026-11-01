@@ -1,20 +1,12 @@
 import { useRef, useState } from "react";
 import { CheckValidateData } from "../utilities/validate";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../utilities/firebase";
-import { useDispatch } from "react-redux";
-import { addUser } from "../utilities/userSlice";
-import { USER_AVATAR } from "../utilities/constants";
+import useAuth from "../hooks/useAuth";
 
 const INPUT_CLASSES =
   "w-full px-4 py-3.5 bg-zinc-800/80 hover:bg-zinc-800 focus:bg-zinc-800/95 text-white text-base rounded-md border border-zinc-700/80 focus:border-[#E50914] focus:ring-1 focus:ring-[#E50914] focus:outline-none transition-all placeholder:text-zinc-500";
 
 const AuthForm = () => {
-  const dispatch = useDispatch();
+  const { login, signup, authError, setAuthError } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -30,41 +22,28 @@ const AuthForm = () => {
       isSignUp ? name.current?.value : undefined,
     );
     setErrors(validationErrors);
+    setAuthError(null);
     if (Object.keys(validationErrors).length > 0) return;
 
-    // 2. Firebase Authentication
-    try {
-      if (isSignUp) {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email.current.value,
-          password.current.value,
-        );
-
-        await updateProfile(userCredential.user, {
-          displayName: name.current?.value,
-          photoURL: USER_AVATAR,
-        });
-
-        const { uid, email: userEmail, displayName, photoURL } = auth.currentUser;
-        dispatch(addUser({ uid, email: userEmail, displayName, photoURL }));
-      } else {
-        await signInWithEmailAndPassword(
-          auth,
-          email.current.value,
-          password.current.value,
-        );
-      }
-      setErrors({});
-    } catch (error) {
-      setErrors({ general: error.message });
+    // 2. Authentication using useAuth hook
+    if (isSignUp) {
+      await signup(
+        name.current?.value,
+        email.current.value,
+        password.current.value,
+      );
+    } else {
+      await login(email.current.value, password.current.value);
     }
   };
 
   const toggleSignup = () => {
     setIsSignUp(!isSignUp);
     setErrors({});
+    setAuthError(null);
   };
+
+  const generalError = errors.general || authError;
 
   return (
     <div className="w-full max-w-112.5 mx-auto bg-black/75 backdrop-blur-md rounded-xl p-8 sm:p-12 md:p-14 border border-white/10 shadow-2xl shadow-black/90 text-white transition-all duration-300">
@@ -127,10 +106,10 @@ const AuthForm = () => {
         </div>
 
         {/* General Error Message */}
-        {errors.general && (
+        {generalError && (
           <div className="p-3 bg-red-950/60 border border-red-500/50 rounded-md">
             <p className="text-red-400 text-xs sm:text-sm font-medium leading-relaxed">
-              {errors.general}
+              {generalError}
             </p>
           </div>
         )}

@@ -1,7 +1,5 @@
 import { Link, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { signOut } from "firebase/auth";
-import { auth } from "../utilities/firebase";
 import { LOGO, SUPPORTED_LANGUAGES, USER_AVATAR } from "../utilities/constants";
 import Button from "./Button";
 import { toggleGptSearchView } from "../utilities/gptSlice";
@@ -11,11 +9,8 @@ import useAuth from "../hooks/useAuth";
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((store) => store.user);
+  const { user, logout } = useAuth();
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
-
-  // Custom hook manages onAuthStateChanged subscription and routing
-  useAuth();
 
   const handleLanguageChange = (e) => {
     dispatch(changeLanguage(e.target.value));
@@ -23,9 +18,7 @@ const Header = () => {
 
   const handleAuthClick = () => {
     if (user) {
-      signOut(auth).catch((error) => {
-        console.error("Sign out error:", error);
-      });
+      logout();
     } else {
       navigate("/");
     }
@@ -35,12 +28,20 @@ const Header = () => {
     dispatch(toggleGptSearchView());
   };
 
+  const handleLogoClick = () => {
+    // If user is logged in and currently in GPT Search, clicking the logo returns them home
+    if (user && showGptSearch) {
+      dispatch(toggleGptSearchView());
+    }
+  };
+
   return (
     <header className="py-5 absolute top-0 left-1/2 -translate-x-1/2 w-full z-20">
       <div className="container flex justify-between items-center">
         <div className="logo">
-          <Link to="/">
-            <img className="max-w-36 w-full" src={LOGO} alt="Netflix Logo" />
+          {/* Prevent navigation to Login ('/') when already logged in */}
+          <Link to={user ? "/browse" : "/"} onClick={handleLogoClick}>
+            <img className="max-w-36 w-full cursor-pointer" src={LOGO} alt="Netflix Logo" />
           </Link>
         </div>
         <div className="btn_wrapper flex items-center gap-3">
@@ -50,7 +51,7 @@ const Header = () => {
                 <div className="language_switcher">
                   <select
                     onChange={handleLanguageChange}
-                    className="bg-red-600 border text-white px-4 py-2 rounded-md"
+                    className="bg-red-600 border text-white px-4 py-2 rounded-md cursor-pointer"
                     name=""
                     id=""
                   >
