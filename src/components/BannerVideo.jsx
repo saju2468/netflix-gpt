@@ -8,7 +8,6 @@ const BannerVideo = ({ title, overview, movieId }) => {
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Video Background */}
       <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
         {trailerVideo?.key && (
           <iframe

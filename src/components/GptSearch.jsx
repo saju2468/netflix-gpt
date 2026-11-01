@@ -3,8 +3,6 @@ import lang from "../utilities/languageConstants";
 import { useSelector } from "react-redux";
 
 const GptSearch = ({
-  // placeholder = "What would you like to watch today?",
-  // buttonText = "Search",
   onSearch,
 }) => {
   const searchText = useRef(null);
